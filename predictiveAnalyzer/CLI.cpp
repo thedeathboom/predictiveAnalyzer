@@ -33,36 +33,56 @@ void RepportError(ErrorType et, const char * fmt, ...)
     RepportError(ET_UNKNOWN, __VA_ARGS__)
 
 struct _G {
-    Words V_n, V_t, P;
+    struct _Vn{
+        Words Word;
+        char * First;
+        char * Follow;
+    }*V_n;
+    Words V_t, P;
     char S[DEFAULT_WD_LEN];
     int n_num, t_num, p_num;
 }G;
 
 void InitG()
 {
-    printf("非终结符的个数:");
+    printf("输入非终结符的个数:");
     scanf("%d", &G.n_num);
     if (!(G.n_num > 0 && G.n_num < DEFAULT_WD_LEN)) IO_ERROR("Illegal parameter.\n");
-    G.V_n = (char(*)[DEFAULT_WD_LEN])calloc(sizeof(char[DEFAULT_WD_LEN]), G.n_num);
-    printf("输入非终结符（各符号以回车隔开）:");
+    G.V_n->Word = (char(*)[DEFAULT_WD_LEN])calloc(sizeof(char[DEFAULT_WD_LEN]), G.n_num);
+    
+    printf("输入非终结符（各符号以回车隔开）:\n>");
     for (int i = 0; i < G.n_num; i++)
         scanf("%s", G.V_n[i]);
-    printf("终结符的个数:");
+    
+    printf("输入终结符的个数:");
     scanf("%d", &G.t_num);
     if (!(G.n_num > 0 && G.n_num < DEFAULT_WD_LEN)) IO_ERROR("Illegal parameter.\n");
     G.V_t = (char(*)[DEFAULT_WD_LEN])calloc(sizeof(char[DEFAULT_WD_LEN]), G.t_num);
-    printf("输入终结符（各符号以回车隔开）:");
+    
+    printf("输入终结符（各符号以回车隔开）:\n>");
     for (int i = 0; i < G.t_num; i++)
         scanf("%s", G.V_t[i]);
-    printf("产生式的个数:");
+    
+    printf("输入产生式的个数:");
     scanf("%d", &G.p_num);
     if (!(G.n_num > 0 && G.n_num < DEFAULT_WD_LEN)) IO_ERROR("Illegal parameter.\n");
     G.P = (char(*)[DEFAULT_WD_LEN])calloc(sizeof(char[DEFAULT_WD_LEN]), G.p_num);
-    printf("输入产生式（例：E->TE'）:");
-    for (int i = 0; i < G.p_num; i++)
+    
+    printf("输入产生式（例：E->TE',各式以回车隔开）:\n>");
+    for (int i = 0; i < G.p_num; i++)            
         scanf("%s", G.P[i]);
+    
     printf("输入起始推导符号:");
     scanf("%s", &G.S);
+
+    for (int i = 0; i < G.n_num; i++)
+    {
+        G.V_n[i].First = (char *)malloc(2 + G.t_num);
+        G.V_n[i].Follow = (char*)malloc(2 + G.t_num);
+        memset(G.V_n[i].First, 0, 2 + G.t_num);
+        memset(G.V_n[i].Follow, 0, 2 + G.t_num);
+    }
+    
 }
 
 int main(int argc, char * argv[])

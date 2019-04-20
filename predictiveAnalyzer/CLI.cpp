@@ -12,7 +12,6 @@ typedef char(*Words)[DEFAULT_WD_LEN];
 void RepportError(ErrorType et, const char * fmt, ...)
 {
     char buffer[DEFAULT_BUF_SIZE];
-    // memset(buffer, 0, DEFAULT_BUF_SIZE);
     va_list ap;
     va_start(ap, fmt);
     vsnprintf(buffer, DEFAULT_BUF_SIZE, fmt, ap);
